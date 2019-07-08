@@ -1,0 +1,11 @@
+{
+  "post":[{
+    "id":1,
+    "replyToId":null,
+    "text": "test text",
+    "author": {
+      "name": "test name"
+    }
+
+  }]
+}
