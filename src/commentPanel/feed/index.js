@@ -29,20 +29,19 @@ export default class Feed extends Component {
     }
 
     addComments(comments) {
-        console.log("add comments");
-        console.log(comments);
         if(!comments) return;
+
         comments.forEach((comment) => this.addComment(comment));
     }
 
     addComment(post) {
-        console.log("add comment");
-        console.log(post);
         const comment = new Comment(post);
         this._comments.push(comment);
+
         this._renderComment(comment.$element);
 
         comment.on('remove-comment', this._removeCommentHandler.bind(this));
+        comment.on('reply-comment', this._replyCommentHandler.bind(this));
 
         return comment;
     }
@@ -51,7 +50,7 @@ export default class Feed extends Component {
         const selector = "#" + id;
         const $comment = this._$element.querySelector(selector);
 
-        this._comments = this.comments.filter((comment) => comment.comment.post.id !== id);
+        this._comments = this._comments.filter((comment) => comment.comment.post.id !== id);
         this._$element.removeChild($comment);
     }
 
@@ -64,9 +63,16 @@ export default class Feed extends Component {
                           }) {
         const id = item.id;
         this.removeComment(id);
-        console.log(this._comments);
         this._trigger('remove-comment', {
             id
+        });
+    }
+
+    _replyCommentHandler({
+                              detail: item
+                          }) {
+        this._trigger('reply-comment', {
+            item
         });
     }
 
