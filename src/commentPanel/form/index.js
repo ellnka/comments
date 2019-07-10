@@ -47,8 +47,10 @@ export default class Form extends Component {
     _submitHandler(event) {
         event.preventDefault();
 
+        const $formParent = this._$element.parentNode;
         const post = {
             "id": Form._generateId(),
+            "reid": ($formParent && $formParent.classList.contains("media"))? $formParent.id : null,
             "time": Form._getCurrentDateAndTime(),
             "text": this.text,
             "author": {

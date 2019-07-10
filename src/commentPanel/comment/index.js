@@ -1,6 +1,7 @@
 import Component from './../lib/component';
 
 import template from './comment.mustache';
+import retemplate from './recomment.mustache';
 import './comment.scss';
 
 
@@ -15,9 +16,9 @@ export default class Comment extends Component {
 
     constructor(comment) {
         super();
+
         this._comment = comment;
-        console.log("new comment")
-        console.log(comment);
+
         this._init();
 
         this.$element.addEventListener('click', this._onclickHandler.bind(this));
@@ -40,18 +41,25 @@ export default class Comment extends Component {
                 return Component.timeAgo(this.post.time);
             }
         };
-        this._$element = this._createElement(template, view);
+
+        this._$element = this._createElement(this.post.reid? template : retemplate, view);
     }
 
 
     _onclickHandler(event) {
         if (event.target.tagName !== 'BUTTON') return;
-        console.log(event.target.id);
+
         if (event.target.id === "remove-comment") {
             const id = this._comment.post.id;
-            console.log(id);
             this._trigger('remove-comment', {
                 id
+            });
+        }
+
+        if (event.target.id === "reply-comment") {
+            const $element = this.$element;
+            this._trigger('reply-comment', {
+                $element
             });
         }
     }
