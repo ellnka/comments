@@ -1,7 +1,6 @@
 import Component from './../lib/component';
 
 import template from './comment.mustache';
-import retemplate from './recomment.mustache';
 import './comment.scss';
 
 
@@ -20,48 +19,51 @@ export default class Comment extends Component {
         this._comment = comment;
 
         this._init();
-
-        this.$element.addEventListener('click', this._onclickHandler.bind(this));
     }
 
     _init() {
         const view = {
             "post": this._comment.post,
-            "id": function() {
+            "id": function () {
                 return this.post.id;
             },
-            "name": function() {
+            "name": function () {
                 console.log(this);
                 return this.post.author.name;
             },
-            "text": function() {
+            "text": function () {
                 return this.post.text;
             },
-            "time": function() {
+            "time": function () {
                 return Component.timeAgo(this.post.time);
             }
         };
 
-        this._$element = this._createElement(this.post.reid? template : retemplate, view);
+        this._$element = this._createElement(template, view);
+
+        this.$element.querySelector(".post #remove-comment").addEventListener("click", this._removeOnclickHandler.bind(this));
+        this.$element.querySelector(".post #reply-comment").addEventListener("click", this._replyOnclickHandler.bind(this));
     }
 
 
-    _onclickHandler(event) {
-        if (event.target.tagName !== 'BUTTON') return;
-
-        if (event.target.id === "remove-comment") {
-            const id = this._comment.post.id;
-            this._trigger('remove-comment', {
-                id
-            });
+    _removeOnclickHandler(event) {
+        let $button = event.target;
+        if ($button.tagName !== "BUTTON") {
+            $button = $button.parentNode;
         }
+        const id = $button.dataset.key;
+        this._trigger('remove-comment', {
+            id
+        });
 
-        if (event.target.id === "reply-comment") {
-            const $element = this.$element;
-            this._trigger('reply-comment', {
-                $element
-            });
-        }
+    }
+
+    _replyOnclickHandler(event) {
+        const $element = this.$element;
+        console.log($element);
+        this._trigger('reply-comment', {
+            $element
+        });
     }
 
 
