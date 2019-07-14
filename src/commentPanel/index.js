@@ -39,6 +39,7 @@ export default class CommentPanel extends Component {
         this._form = new Form({});
         this._$form.appendChild(this._form.$element);
         this._form.on('post-comment', this._postCommentHandler.bind(this));
+        this._form.on('cancel-comment', this._cancelCommentHandler.bind(this));
     }
 
     _removeLoader() {
@@ -47,7 +48,7 @@ export default class CommentPanel extends Component {
     }
 
     _renderFeed(data) {
-        if(!this._feed) {
+        if (!this._feed) {
             this._initFeed(data);
         } else {
             this._feed.addComments(data.posts || [data]);
@@ -78,10 +79,13 @@ export default class CommentPanel extends Component {
         Services.update(url, this._formatPosts());
     }
 
+    _cancelCommentHandler() {
+        this._rerenderForm(this._$form);
+    }
+
     _replyCommentHandler({
                              detail: item
                          }) {
-        console.log(item.item.$element);
         this._rerenderForm(item.item.$element);
     }
 

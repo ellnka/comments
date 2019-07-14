@@ -29,7 +29,7 @@ export default class Feed extends Component {
     }
 
     addComments(comments) {
-        if(!comments) return;
+        if (!comments) return;
 
         comments.forEach((comment) => this.addComment(comment));
     }
@@ -38,7 +38,7 @@ export default class Feed extends Component {
         const comment = new Comment(post);
         this._comments.push(comment);
 
-        this._renderComment(comment.$element);
+        this._renderComment(comment);
 
         comment.on('remove-comment', this._removeCommentHandler.bind(this));
         comment.on('reply-comment', this._replyCommentHandler.bind(this));
@@ -49,19 +49,21 @@ export default class Feed extends Component {
     removeComment(id) {
         const selector = "#" + id;
         const $comment = this._$element.querySelector(selector);
-
+        console.log(this._$element);
+        console.log($comment);
         this._comments = this._comments.filter((comment) => comment.comment.post.id !== id);
-        this._$element.removeChild($comment);
+        $comment.parentNode.removeChild($comment);
     }
 
     getAllComments() {
-        return this._comments.map((comment) => comment.comment);
+        return this._comments.map((comment) => comment.commesnt);
     }
 
     _removeCommentHandler({
                               detail: item
                           }) {
         const id = item.id;
+        console.log(id);
         this.removeComment(id);
         this._trigger('remove-comment', {
             id
@@ -69,17 +71,25 @@ export default class Feed extends Component {
     }
 
     _replyCommentHandler({
-                              detail: item
-                          }) {
+                             detail: item
+                         }) {
         this._trigger('reply-comment', {
             item
         });
     }
 
-    _renderComment($comment) {
-        this._$element.appendChild($comment);
+    _renderComment(comment) {
+        let $parent = null;
+        if (comment.comment.post.hasOwnProperty("reid") && comment.comment.post.reid) {
+            $parent = this._$element.querySelector("#" + comment.comment.post.reid);
+        }
+        if ($parent) {
+            let $replyComment = $parent.querySelector(".reply");
+            $replyComment.appendChild(comment.$element);
+        } else {
+            this._$element.appendChild(comment.$element);
+        }
     }
-
 
 
 }

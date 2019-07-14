@@ -11,6 +11,7 @@ export default class Form extends Component {
     set text(value) {
         this._$text.value = value;
     }
+
     get $element() {
         return this._$element;
     }
@@ -30,7 +31,11 @@ export default class Form extends Component {
         this._$name = this._$element.querySelector('[data-selector="name"]');
         this._$text = this._$element.querySelector('[data-selector="text"]');
 
+        this._$name.addEventListener("keypress", this._inputHandler.bind(this));
+        this._$text.addEventListener("keypress", this._inputHandler.bind(this));
+
         this._$element.addEventListener("submit", this._submitHandler.bind(this));
+        this._$element.querySelector("#cancel").addEventListener("click", this._cancelHandler.bind(this));
     }
 
     static _generateId() {
@@ -44,13 +49,23 @@ export default class Form extends Component {
         return date + ' ' + time;
     }
 
+    _inputHandler(event) {
+        if (event.target.parentNode.classList.contains("has-error")) {
+            event.target.parentNode.classList.remove("has-error");
+        }
+    }
+
     _submitHandler(event) {
         event.preventDefault();
+
+        if (!this._inputValidation(this._$name) || !this._inputValidation(this._$text)) {
+            return;
+        }
 
         const $formParent = this._$element.parentNode;
         const post = {
             "id": Form._generateId(),
-            "reid": ($formParent && $formParent.classList.contains("media"))? $formParent.id : null,
+            "reid": ($formParent && $formParent.tagName === "LI") ? $formParent.id : null,
             "time": Form._getCurrentDateAndTime(),
             "text": this.text,
             "author": {
@@ -64,6 +79,21 @@ export default class Form extends Component {
 
         this.name = "";
         this.text = "";
+    }
+
+    _cancelHandler() {
+        this._trigger("cancel-comment");
+
+        this.name = "";
+        this.text = "";
+    }
+
+    _inputValidation($input) {
+        if ($input.value === "") {
+            $input.parentNode.classList.add("has-error");
+            return false;
+        }
+        return true;
     }
 
 }
