@@ -1,0 +1,21 @@
+<li class="list-group-item" id="{{id}}">
+    <a href="#" class="pull-left">
+        <img src="/imgs/photo.jpg" alt="" class="avatar avatar-32 img-circle">
+    </a>
+    <div class="post">
+        <span class="text-muted pull-right">
+            <small class="text-muted">{{time}}</small>
+            <button type="button" class="btn btn-xs" id="remove-comment" data-key="{{id}}" title="Remove">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+            <button type="button" class="btn btn-xs" id="reply-comment" data-key="{{id}}" title="Reply">
+                <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+            </button>
+        </span>
+        <strong class="text-success">{{name}}</strong>
+        <p>
+            {{text}}
+        </p>
+    </div>
+    <div class="reply"></div>
+</li>
