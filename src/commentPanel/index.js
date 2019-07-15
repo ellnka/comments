@@ -94,6 +94,9 @@ export default class CommentPanel extends Component {
     }
 
     _formatPosts() {
+        console.log(this._feed);
+        console.log(this._feed.getAllComments());
+
         return {
             posts: this._feed.getAllComments()
         };
