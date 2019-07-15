@@ -35,6 +35,8 @@ export default class Feed extends Component {
     }
 
     addComment(post) {
+        if (!post) return;
+
         const comment = new Comment(post);
         this._comments.push(comment);
 
@@ -56,7 +58,9 @@ export default class Feed extends Component {
     }
 
     getAllComments() {
-        return this._comments.map((comment) => comment.commesnt);
+        console.log("getAllComments");
+        console.log(this._comments);
+        return this._comments.map((comment) => comment.comment);
     }
 
     _removeCommentHandler({
